@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
+alert("app.js loaded");
 import {
 getAuth,
 createUserWithEmailAndPassword,
