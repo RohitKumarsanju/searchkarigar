@@ -1,3 +1,13 @@
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
 import {
 getFirestore,
 doc,
@@ -10,27 +20,14 @@ orderBy,
 getDocs
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-import {
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-import {
-getFirestore,
-doc,
-setDoc
-}
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDQU49qoppo4GQqvnSCAgwiA7LJne8vFDw",
-  authDomain: "searchkarigar-da9c6.firebaseapp.com",
-  projectId: "searchkarigar-da9c6",
-  storageBucket: "searchkarigar-da9c6.firebasestorage.app",
-  messagingSenderId: "836531758694",
-  appId: "1:836531758694:web:33f2068d27b2ecbba86fa7"
+apiKey: "AIzaSyDQU49qoppo4GQqvnSCAgwiA7LJne8vFDw",
+authDomain: "searchkarigar-da9c6.firebaseapp.com",
+projectId: "searchkarigar-da9c6",
+storageBucket: "searchkarigar-da9c6.firebasestorage.app",
+messagingSenderId: "836531758694",
+appId: "1:836531758694:web:33f2068d27b2ecbba86fa7"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -45,26 +42,15 @@ if(registerBtn){
 
 registerBtn.addEventListener("click", async ()=>{
 
-const name =
-document.getElementById("regName").value;
-
-const mobile =
-document.getElementById("regMobile").value;
-
-const email =
-document.getElementById("regEmail").value;
-
-const password =
-document.getElementById("regPassword").value;
-
-const userType =
-document.getElementById("regUserType").value;
+const name = document.getElementById("regName").value;
+const mobile = document.getElementById("regMobile").value;
+const email = document.getElementById("regEmail").value;
+const password = document.getElementById("regPassword").value;
+const userType = document.getElementById("regUserType").value;
 
 if(!name || !email || !password){
-
 alert("Please fill all required fields");
 return;
-
 }
 
 try{
@@ -81,21 +67,18 @@ const user = userCredential.user;
 await setDoc(
 doc(db,"users",user.uid),
 {
-name:name,
-mobile:mobile,
-email:email,
-userType:userType,
-createdAt:new Date().toISOString()
+name,
+mobile,
+email,
+userType,
+createdAt: Date.now()
 }
 );
 
 alert("Account Created Successfully");
 
-}
-catch(error){
-
+}catch(error){
 alert(error.message);
-
 }
 
 });
@@ -104,12 +87,11 @@ alert(error.message);
 
 /* LOGIN */
 
-const loginBtn =
-document.getElementById("loginBtn");
+const loginBtn = document.getElementById("loginBtn");
 
 if(loginBtn){
 
-loginBtn.addEventListener("click",async()=>{
+loginBtn.addEventListener("click", async()=>{
 
 const email =
 document.getElementById("loginEmail").value;
@@ -127,29 +109,21 @@ password
 
 alert("Login Successful");
 
-if(email==="bigrushcom@gmail.com"){
-
-alert("Admin Login Detected");
-
-}
-
-}
-catch(error){
-
+}catch(error){
 alert(error.message);
-
 }
 
 });
 
-  }
+}
+
 /* POST SYSTEM */
 
 const postBtn = document.getElementById("postBtn");
 
 if(postBtn){
 
-postBtn.addEventListener("click", async ()=>{
+postBtn.addEventListener("click", async()=>{
 
 const user = auth.currentUser;
 
@@ -159,7 +133,7 @@ return;
 }
 
 const postText =
-document.getElementById("postText").value;
+document.getElementById("postText").value.trim();
 
 if(!postText){
 alert("Post likho");
@@ -168,11 +142,15 @@ return;
 
 try{
 
-const userDoc =
+const userSnap =
 await getDoc(doc(db,"users",user.uid));
 
-const userData =
-userDoc.data();
+if(!userSnap.exists()){
+alert("User profile nahi mila");
+return;
+}
+
+const userData = userSnap.data();
 
 await addDoc(
 collection(db,"posts"),
@@ -191,11 +169,8 @@ alert("Post Published");
 
 loadPosts();
 
-}
-catch(error){
-
+}catch(error){
 alert(error.message);
-
 }
 
 });
@@ -213,41 +188,34 @@ if(!container) return;
 
 container.innerHTML = "";
 
-const q =
-query(
+try{
+
+const q = query(
 collection(db,"posts"),
 orderBy("createdAt","desc")
 );
 
-const snapshot =
-await getDocs(q);
+const snapshot = await getDocs(q);
 
 snapshot.forEach((docSnap)=>{
 
-const post =
-docSnap.data();
+const post = docSnap.data();
 
 container.innerHTML += `
-
 <div class="post">
-
-<div class="post-user">
-${post.userName}
+<div class="post-user">${post.userName}</div>
+<div class="post-type">${post.userType}</div>
+<div>${post.postText}</div>
 </div>
-
-<div class="post-type">
-${post.userType}
-</div>
-
-<div>
-${post.postText}
-</div>
-
-</div>
-
 `;
 
 });
+
+}catch(error){
+
+console.error(error);
+
+}
 
 }
 
