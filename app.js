@@ -1,10 +1,11 @@
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
 import {
 getAuth,
 createUserWithEmailAndPassword,
-signInWithEmailAndPassword
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
@@ -112,7 +113,8 @@ console.log("login success");
 
 document.getElementById("loginBox").classList.add("hidden");
 
-alert("hide command executed");
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("registerBox").classList.add("hidden");
 
 }catch(error){
 alert(error.message);
@@ -225,3 +227,44 @@ console.error(error);
 }
 
 loadPosts();
+/* USER STATUS */
+
+onAuthStateChanged(auth, async(user)=>{
+
+const authArea =
+document.getElementById("authArea");
+
+if(!authArea) return;
+
+if(user){
+
+const userSnap =
+await getDoc(doc(db,"users",user.uid));
+
+const userData =
+userSnap.data();
+
+authArea.innerHTML = `
+<span style="color:white;margin-right:10px;">
+Welcome, ${userData.name}
+</span>
+
+<button id="logoutBtn" class="btn">
+Logout
+</button>
+`;
+
+const logoutBtn =
+document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", async()=>{
+
+await signOut(auth);
+
+location.reload();
+
+});
+
+}
+
+});
