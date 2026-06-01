@@ -106,10 +106,13 @@ auth,
 email,
 password
 );
-
 alert("Login Successful");
-  document.getElementById("loginBox").classList.add("hidden");
-document.getElementById("registerBox").classList.add("hidden");
+
+console.log("login success");
+
+document.getElementById("loginBox").classList.add("hidden");
+
+alert("hide command executed");
 
 }catch(error){
 alert(error.message);
