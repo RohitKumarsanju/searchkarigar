@@ -174,25 +174,11 @@ Karigar, Factory Owner, Material Shop aur Wholesale Footwear Business ko jodne w
 
 <select id="regUserType">
 
-<option>
-Aap kya hain?
-</option>
-
-<option>
-Karigar
-</option>
-
-<option>
-Karkhana Malik
-</option>
-
-<option>
-Material Shop
-</option>
-
-<option>
-Wholesale Footwear Shop
-</option>
+<option>Aap kya hain?</option>
+<option>Karigar</option>
+<option>Karkhana Malik</option>
+<option>Material Shop</option>
+<option>Wholesale Footwear Shop</option>
 
 </select>
 
@@ -224,11 +210,11 @@ Login
 
 <h3>Create Post</h3>
 
-<textarea placeholder="Yahan apni requirement ya job post likhiye..."></textarea>
+<textarea id="postText" placeholder="Yahan apni requirement ya job post likhiye..."></textarea>
 
 <input type="file">
 
-<button class="btn">
+<button id="postBtn" class="btn">
 Post Publish
 </button>
 
@@ -236,37 +222,7 @@ Post Publish
 
 <!-- POSTS FEED -->
 
-<div class="post">
-
-<div class="post-user">
-Demo User
-</div>
-
-<div class="post-type">
-Karigar
-</div>
-
-<div>
-5 Stitching Karigar ki zarurat hai. Location: Nangloi.
-</div>
-
-</div>
-
-<div class="post">
-
-<div class="post-user">
-Factory Owner
-</div>
-
-<div class="post-type">
-Karkhana Malik
-</div>
-
-<div>
-Footwear Sole Fitting Worker required.
-</div>
-
-</div>
+<div id="postsContainer"></div>
 
 </div>
 
@@ -282,8 +238,9 @@ Material rates aur industry updates yahan dikhaye jayenge.
 Material Rates
 </button>
 
-</footer> 
-  <script>
+</footer>
+
+<script>
 function showRegister(){
 document.getElementById("registerBox").classList.remove("hidden");
 document.getElementById("loginBox").classList.add("hidden");
@@ -293,8 +250,9 @@ function showLogin(){
 document.getElementById("loginBox").classList.remove("hidden");
 document.getElementById("registerBox").classList.add("hidden");
 }
-  </script>
+</script>
+
 <script type="module" src="app.js"></script>
-  
+
 </body>
-</html>
+  </html>
