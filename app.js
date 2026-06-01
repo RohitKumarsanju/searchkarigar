@@ -1,4 +1,15 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+getFirestore,
+doc,
+setDoc,
+getDoc,
+addDoc,
+collection,
+query,
+orderBy,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import {
 getAuth,
 createUserWithEmailAndPassword,
@@ -132,3 +143,112 @@ alert(error.message);
 });
 
   }
+/* POST SYSTEM */
+
+const postBtn = document.getElementById("postBtn");
+
+if(postBtn){
+
+postBtn.addEventListener("click", async ()=>{
+
+const user = auth.currentUser;
+
+if(!user){
+alert("Pehle Login Karo");
+return;
+}
+
+const postText =
+document.getElementById("postText").value;
+
+if(!postText){
+alert("Post likho");
+return;
+}
+
+try{
+
+const userDoc =
+await getDoc(doc(db,"users",user.uid));
+
+const userData =
+userDoc.data();
+
+await addDoc(
+collection(db,"posts"),
+{
+userId:user.uid,
+userName:userData.name,
+userType:userData.userType,
+postText:postText,
+createdAt:Date.now()
+}
+);
+
+document.getElementById("postText").value="";
+
+alert("Post Published");
+
+loadPosts();
+
+}
+catch(error){
+
+alert(error.message);
+
+}
+
+});
+
+}
+
+/* LOAD POSTS */
+
+async function loadPosts(){
+
+const container =
+document.getElementById("postsContainer");
+
+if(!container) return;
+
+container.innerHTML = "";
+
+const q =
+query(
+collection(db,"posts"),
+orderBy("createdAt","desc")
+);
+
+const snapshot =
+await getDocs(q);
+
+snapshot.forEach((docSnap)=>{
+
+const post =
+docSnap.data();
+
+container.innerHTML += `
+
+<div class="post">
+
+<div class="post-user">
+${post.userName}
+</div>
+
+<div class="post-type">
+${post.userType}
+</div>
+
+<div>
+${post.postText}
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+loadPosts();
