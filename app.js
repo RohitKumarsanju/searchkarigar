@@ -108,6 +108,8 @@ password
 );
 
 alert("Login Successful");
+  document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("registerBox").classList.add("hidden");
 
 }catch(error){
 alert(error.message);
