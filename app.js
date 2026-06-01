@@ -18,7 +18,8 @@ addDoc,
 collection,
 query,
 orderBy,
-getDocs
+getDocs,
+updateDoc
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
@@ -227,10 +228,100 @@ console.error(error);
 }
 
 loadPosts();
+/* FOOTER SYSTEM */
+
+async function loadFooter(){
+
+try{
+
+const footerDoc =
+await getDoc(doc(db,"settings","footer"));
+
+if(!footerDoc.exists()) return;
+
+const data = footerDoc.data();
+
+const footerText =
+document.getElementById("footerText");
+
+const footerBtn =
+document.getElementById("footerBtn");
+
+if(footerText){
+footerText.innerText = data.text || "";
+}
+
+if(footerBtn){
+
+footerBtn.onclick = ()=>{
+
+if(data.link){
+window.open(data.link,"_blank");
+}
+
+};
+
+}
+
+}catch(error){
+
+console.log(error);
+
+}
+
+}
+
+loadFooter();
 /* USER STATUS */
 
 onAuthStateChanged(auth, async(user)=>{
+if(user.email === "bigrushcom@gmail.com"){
 
+const panel =
+document.getElementById("adminFooterPanel");
+
+panel.classList.remove("hidden");
+
+const footerDoc =
+await getDoc(doc(db,"settings","footer"));
+
+if(footerDoc.exists()){
+
+const data = footerDoc.data();
+
+document.getElementById("footerTextInput").value =
+data.text || "";
+
+document.getElementById("footerLinkInput").value =
+data.link || "";
+
+}
+
+document
+.getElementById("saveFooterBtn")
+.onclick = async ()=>{
+
+const newText =
+document.getElementById("footerTextInput").value;
+
+const newLink =
+document.getElementById("footerLinkInput").value;
+
+await updateDoc(
+doc(db,"settings","footer"),
+{
+text:newText,
+link:newLink
+}
+);
+
+alert("Footer Updated");
+
+loadFooter();
+
+};
+
+      }
 const authArea =
 document.getElementById("authArea");
 
