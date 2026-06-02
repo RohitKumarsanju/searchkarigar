@@ -275,10 +275,38 @@ loadFooter();
 /* USER STATUS */
 
 onAuthStateChanged(auth, async(user)=>{
+
+const authArea =
+document.getElementById("authArea");
+
+if(!authArea) return;
+
+/* USER NOT LOGGED IN */
+
+if(!user){
+
+authArea.innerHTML = `
+<button class="btn" onclick="showLogin()">
+Login
+</button>
+
+<button class="btn" onclick="showRegister()">
+Register
+</button>
+`;
+
+return;
+
+}
+
+/* ADMIN FOOTER PANEL */
+
 if(user.email === "bigrushcom@gmail.com"){
 
 const panel =
 document.getElementById("adminFooterPanel");
+
+if(panel){
 
 panel.classList.remove("hidden");
 
@@ -297,15 +325,16 @@ data.link || "";
 
 }
 
-document
-.getElementById("saveFooterBtn")
-.onclick = async ()=>{
+document.getElementById("saveFooterBtn").onclick =
+async ()=>{
 
 const newText =
 document.getElementById("footerTextInput").value;
 
 const newLink =
 document.getElementById("footerLinkInput").value;
+
+try{
 
 await updateDoc(
 doc(db,"settings","footer"),
@@ -319,18 +348,24 @@ alert("Footer Updated");
 
 loadFooter();
 
+}catch(error){
+
+alert(error.message);
+
+}
+
 };
 
-      }
-const authArea =
-document.getElementById("authArea");
+}
 
-if(!authArea) return;
+}
 
-if(user){
+/* LOAD USER INFO */
 
 const userSnap =
 await getDoc(doc(db,"users",user.uid));
+
+if(!userSnap.exists()) return;
 
 const userData =
 userSnap.data();
@@ -356,6 +391,5 @@ location.reload();
 
 });
 
-}
-
+});
 });
